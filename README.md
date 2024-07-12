@@ -7,6 +7,8 @@
 
 This library provides an implementation for interacting with Azure's OpenAI service. It allows you to configure and utilize a ChatClient to perform various tasks using OpenAI's models.
 
+For the direct from OpenAI version of this: [Soenneker.OpenAI.Client.Chat](https://github.com/soenneker/soenneker.openai.client.chat)
+
 ## Installation
 
 ```
