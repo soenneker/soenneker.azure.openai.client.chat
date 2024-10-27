@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Azure.OpenAI.Client.Chat.Abstract;
+using Soenneker.Azure.OpenAI.Client.Registrars;
 
 // ReSharper disable InconsistentNaming
 
@@ -16,6 +17,7 @@ public static class AzureOpenAIChatClientRegistrar
     /// </summary>
     public static void AddAzureOpenAIChatClientAsSingleton(this IServiceCollection services)
     {
+        services.AddAzureOpenAIClientUtilAsSingleton();
         services.TryAddSingleton<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
     }
 
@@ -24,6 +26,7 @@ public static class AzureOpenAIChatClientRegistrar
     /// </summary>
     public static void AddAzureOpenAIChatClientAsScoped(this IServiceCollection services)
     {
+        services.AddAzureOpenAIClientUtilAsScoped();
         services.TryAddScoped<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
     }
 }

@@ -1,14 +1,14 @@
 using System;
-using System.ClientModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OpenAI.Chat;
+using Soenneker.Azure.OpenAI.Client.Abstract;
 using Soenneker.Azure.OpenAI.Client.Chat.Abstract;
-using Soenneker.Extensions.Configuration;
 using Soenneker.Extensions.String;
+using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
 
 // ReSharper disable InconsistentNaming
@@ -20,25 +20,20 @@ public class AzureOpenAIChatClient : IAzureOpenAIChatClient
 {
     private readonly AsyncSingleton<ChatClient> _client;
 
-    private AzureOpenAIClientOptions? _options;
     private string _deployment;
 
-    public AzureOpenAIChatClient(ILogger<ChatClient> logger, IConfiguration configuration)
+    public AzureOpenAIChatClient(ILogger<ChatClient> logger, IConfiguration configuration, IAzureOpenAIClientUtil azureOpenAiClientUtil)
     {
-        _client = new AsyncSingleton<ChatClient>(() =>
+        _client = new AsyncSingleton<ChatClient>(async (ct, obj) =>
         {
-            var uri = configuration.GetValueStrict<string>("Azure:OpenAI:Uri");
-            var apiKey = configuration.GetValueStrict<string>("Azure:OpenAI:ApiKey");
+            AzureOpenAIClient azureClient = await azureOpenAiClientUtil.Get(ct).NoSync();
+
             var deployment = configuration.GetValue<string?>("Azure:OpenAI:Deployment");
 
             if (!_deployment.IsNullOrEmpty())
                 deployment = _deployment;
 
-            logger.LogDebug("Creating Azure OpenAI client with deployment ({deployment})...", deployment);
-
-            var credential = new ApiKeyCredential(apiKey);
-
-            var azureClient = new AzureOpenAIClient(new Uri(uri), credential, _options);
+            logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
 
             ChatClient? client = azureClient.GetChatClient(deployment);
 
@@ -46,10 +41,9 @@ public class AzureOpenAIChatClient : IAzureOpenAIChatClient
         });
     }
 
-    public void SetOptions(string model, AzureOpenAIClientOptions options)
+    public void SetOptions(string deployment)
     {
-        _deployment = model;
-        _options = options;
+        _deployment = deployment;
     }
 
     public ValueTask<ChatClient> Get(CancellationToken cancellationToken = default)

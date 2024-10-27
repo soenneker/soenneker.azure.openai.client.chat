@@ -38,14 +38,10 @@
         <None Include="..\CONTRIBUTING.md" Link="CONTRIBUTING.md" />
         <None Include="..\README.md" Pack="true" PackagePath="\" />
         <None Include="..\LICENSE" Pack="true" PackagePath="\" />
-        <None Include="..\icon.png" Pack="true" PackagePath="\"/>
+        <None Include="..\icon.png" Pack="true" PackagePath="\" />
     </ItemGroup>
-
+    
     <ItemGroup>
-        <PackageReference Include="Azure.AI.OpenAI" Version="2.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-        <PackageReference Include="Soenneker.Extensions.Configuration" Version="2.1.450" />
-        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="2.1.399" />
+      <PackageReference Include="Soenneker.Azure.OpenAI.Client" Version="2.1.1" />
     </ItemGroup>
 </Project>
