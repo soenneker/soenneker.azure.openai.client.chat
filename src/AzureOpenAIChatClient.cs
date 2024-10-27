@@ -20,18 +20,20 @@ public class AzureOpenAIChatClient : IAzureOpenAIChatClient
 {
     private readonly AsyncSingleton<ChatClient> _client;
 
-    private string _deployment;
+    private string? _deployment;
 
     public AzureOpenAIChatClient(ILogger<ChatClient> logger, IConfiguration configuration, IAzureOpenAIClientUtil azureOpenAiClientUtil)
     {
-        _client = new AsyncSingleton<ChatClient>(async (ct, obj) =>
+        _client = new AsyncSingleton<ChatClient>(async (ct, _) =>
         {
             AzureOpenAIClient azureClient = await azureOpenAiClientUtil.Get(ct).NoSync();
 
-            var deployment = configuration.GetValue<string?>("Azure:OpenAI:Deployment");
+            var deployment = configuration.GetValue<string?>("Azure:OpenAI:Chat:Deployment");
 
             if (!_deployment.IsNullOrEmpty())
                 deployment = _deployment;
+
+            deployment.ThrowIfNullOrWhitespace();
 
             logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
 

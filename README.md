@@ -24,7 +24,7 @@ builder.services.AddAzureOpenAIChatClientAsSingleton();
 `IConfiguration` values:
 
 ```
-"Azure:OpenAI:Deployment"
+"Azure:OpenAI:Chat:Deployment"
 "Azure:OpenAI:ApiKey"
 "Azure:OpenAI:Uri"
 ```
