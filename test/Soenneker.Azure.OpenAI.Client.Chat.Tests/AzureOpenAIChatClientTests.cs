@@ -1,7 +1,7 @@
 using Soenneker.Azure.OpenAI.Client.Chat.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
-using Xunit.Abstractions;
+
 
 namespace Soenneker.Azure.OpenAI.Client.Chat.Tests;
 
