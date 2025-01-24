@@ -33,7 +33,7 @@ public class AzureOpenAIChatClient : IAzureOpenAIChatClient
             if (!_deployment.IsNullOrEmpty())
                 deployment = _deployment;
 
-            deployment.ThrowIfNullOrWhitespace();
+            deployment.ThrowIfNullOrWhiteSpace();
 
             logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
 
