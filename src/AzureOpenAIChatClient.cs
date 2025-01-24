@@ -37,9 +37,7 @@ public class AzureOpenAIChatClient : IAzureOpenAIChatClient
 
             logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
 
-            ChatClient? client = azureClient.GetChatClient(deployment);
-
-            return client;
+            return azureClient.GetChatClient(deployment);
         });
     }
 
