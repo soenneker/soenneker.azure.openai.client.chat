@@ -46,7 +46,7 @@
         <PackageReference Include="Azure.Identity" Version="1.13.2" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
-        <PackageReference Include="Soenneker.Extensions.Configuration" Version="3.0.643" />
+        <PackageReference Include="Soenneker.Extensions.Configuration" Version="3.0.644" />
         <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="3.0.647" />
     </ItemGroup>
 </Project>
