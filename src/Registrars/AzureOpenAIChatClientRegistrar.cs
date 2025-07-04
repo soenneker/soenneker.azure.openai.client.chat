@@ -17,8 +17,7 @@ public static class AzureOpenAIChatClientRegistrar
     /// </summary>
     public static IServiceCollection AddAzureOpenAIChatClientAsSingleton(this IServiceCollection services)
     {
-        services.AddAzureOpenAIClientUtilAsSingleton();
-        services.TryAddSingleton<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
+        services.AddAzureOpenAIClientUtilAsSingleton().TryAddSingleton<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
 
         return services;
     }
@@ -28,8 +27,7 @@ public static class AzureOpenAIChatClientRegistrar
     /// </summary>
     public static IServiceCollection AddAzureOpenAIChatClientAsScoped(this IServiceCollection services)
     {
-        services.AddAzureOpenAIClientUtilAsScoped();
-        services.TryAddScoped<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
+        services.AddAzureOpenAIClientUtilAsScoped().TryAddScoped<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
 
         return services;
     }

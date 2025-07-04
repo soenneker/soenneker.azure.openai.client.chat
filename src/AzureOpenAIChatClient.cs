@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
@@ -16,7 +15,7 @@ using Soenneker.Utils.AsyncSingleton;
 namespace Soenneker.Azure.OpenAI.Client.Chat;
 
 /// <inheritdoc cref="IAzureOpenAIChatClient"/>
-public class AzureOpenAIChatClient : IAzureOpenAIChatClient
+public sealed class AzureOpenAIChatClient : IAzureOpenAIChatClient
 {
     private readonly AsyncSingleton<ChatClient> _client;
 
@@ -53,15 +52,11 @@ public class AzureOpenAIChatClient : IAzureOpenAIChatClient
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _client.Dispose();
     }
 
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
-
         return _client.DisposeAsync();
     }
 }
