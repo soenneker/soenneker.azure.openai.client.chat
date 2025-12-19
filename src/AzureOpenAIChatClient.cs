@@ -23,7 +23,7 @@ public sealed class AzureOpenAIChatClient : IAzureOpenAIChatClient
 
     public AzureOpenAIChatClient(ILogger<ChatClient> logger, IConfiguration configuration, IAzureOpenAIClientUtil azureOpenAiClientUtil)
     {
-        _client = new AsyncSingleton<ChatClient>(async (ct, _) =>
+        _client = new AsyncSingleton<ChatClient>(async ct =>
         {
             AzureOpenAIClient azureClient = await azureOpenAiClientUtil.Get(ct).NoSync();
 
