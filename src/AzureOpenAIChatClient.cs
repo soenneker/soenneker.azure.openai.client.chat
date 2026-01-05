@@ -18,26 +18,34 @@ namespace Soenneker.Azure.OpenAI.Client.Chat;
 public sealed class AzureOpenAIChatClient : IAzureOpenAIChatClient
 {
     private readonly AsyncSingleton<ChatClient> _client;
+    private readonly ILogger<ChatClient> _logger;
+    private readonly IConfiguration _configuration;
+    private readonly IAzureOpenAIClientUtil _azureOpenAiClientUtil;
 
     private string? _deployment;
 
     public AzureOpenAIChatClient(ILogger<ChatClient> logger, IConfiguration configuration, IAzureOpenAIClientUtil azureOpenAiClientUtil)
     {
-        _client = new AsyncSingleton<ChatClient>(async ct =>
-        {
-            AzureOpenAIClient azureClient = await azureOpenAiClientUtil.Get(ct).NoSync();
+        _logger = logger;
+        _configuration = configuration;
+        _azureOpenAiClientUtil = azureOpenAiClientUtil;
+        _client = new AsyncSingleton<ChatClient>(CreateClient);
+    }
 
-            var deployment = configuration.GetValue<string?>("Azure:OpenAI:Chat:Deployment");
+    private async ValueTask<ChatClient> CreateClient(CancellationToken ct)
+    {
+        AzureOpenAIClient azureClient = await _azureOpenAiClientUtil.Get(ct).NoSync();
 
-            if (!_deployment.IsNullOrEmpty())
-                deployment = _deployment;
+        var deployment = _configuration.GetValue<string?>("Azure:OpenAI:Chat:Deployment");
 
-            deployment.ThrowIfNullOrWhiteSpace();
+        if (!_deployment.IsNullOrEmpty())
+            deployment = _deployment;
 
-            logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
+        deployment.ThrowIfNullOrWhiteSpace();
 
-            return azureClient.GetChatClient(deployment);
-        });
+        _logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
+
+        return azureClient.GetChatClient(deployment);
     }
 
     public void SetOptions(string deployment)
