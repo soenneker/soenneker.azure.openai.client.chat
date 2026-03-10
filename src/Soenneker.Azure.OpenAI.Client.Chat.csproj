@@ -41,6 +41,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Soenneker.Azure.OpenAI.Client" Version="4.0.882" />
+      <PackageReference Include="Soenneker.Azure.OpenAI.Client" Version="4.0.883" />
     </ItemGroup>
 </Project>
