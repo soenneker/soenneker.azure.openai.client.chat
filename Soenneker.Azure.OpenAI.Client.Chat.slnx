@@ -4,10 +4,11 @@
   </Folder>
   <Folder Name="/.github/workflows/">
     <File Path=".github/workflows/build-and-test.yml" />
+    <File Path=".github/workflows/codeql.yml" />
     <File Path=".github/workflows/publish-package.yml" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Soenneker.Azure.OpenAI.Client.Chat.csproj" />
+    <Project Path="src/Soenneker.Azure.OpenAI.Client.Chat/Soenneker.Azure.OpenAI.Client.Chat.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Soenneker.Azure.OpenAI.Client.Chat.Tests/Soenneker.Azure.OpenAI.Client.Chat.Tests.csproj" />
