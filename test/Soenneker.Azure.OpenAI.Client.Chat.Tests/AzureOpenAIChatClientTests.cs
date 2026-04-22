@@ -1,20 +1,19 @@
 using Soenneker.Azure.OpenAI.Client.Chat.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Azure.OpenAI.Client.Chat.Tests;
 
-[Collection("Collection")]
-public class AzureOpenAIChatClientTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class AzureOpenAIChatClientTests : HostedUnitTest
 {
     private readonly IAzureOpenAIChatClient _util;
 
-    public AzureOpenAIChatClientTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public AzureOpenAIChatClientTests(Host host) : base(host)
     {
         _util = Resolve<IAzureOpenAIChatClient>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
