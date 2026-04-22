@@ -31,10 +31,5 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Soenneker.Azure.OpenAI.Client.Chat\Soenneker.Azure.OpenAI.Client.Chat.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="testconfig.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
 </Project>
+
