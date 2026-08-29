@@ -5,19 +5,18 @@ using OpenAI.Chat;
 
 namespace Soenneker.Azure.OpenAI.Client.Chat.Abstract;
 
-/// <summary>
-/// An async thread-safe singleton for the Azure OpenAI Chat (completions) client
-/// </summary>
 // ReSharper disable once InconsistentNaming
 /// <summary>
-/// Defines the azure open ai chat client contract.
+/// Creates and caches an Azure OpenAI chat client for a configured deployment.
 /// </summary>
 public interface IAzureOpenAIChatClient : IDisposable, IAsyncDisposable
 {
     /// <summary>
-    /// Not required, but can be used to set the deployment and options for the client
+    /// Overrides the configured deployment before the client is first created.
     /// </summary>
-    /// <param name="deployment"></param>
+    /// <param name="deployment">Azure OpenAI deployment name.</param>
+    /// <exception cref="ArgumentException"><paramref name="deployment"/> is blank.</exception>
+    /// <exception cref="InvalidOperationException">The chat client has already been created.</exception>
     void SetOptions(string deployment);
 
     /// <summary>

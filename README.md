@@ -1,51 +1,72 @@
-[![](https://img.shields.io/nuget/v/soenneker.openai.client.chat.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.openai.client.chat/)
-[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.openai.client.chat/publish-package.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.openai.client.chat/actions/workflows/publish-package.yml)
-[![](https://img.shields.io/nuget/dt/soenneker.openai.client.chat.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.openai.client.chat/)
-[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.openai.client.chat/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.openai.client.chat/actions/workflows/codeql.yml)
+[![](https://img.shields.io/nuget/v/soenneker.azure.openai.client.chat.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.azure.openai.client.chat/)
+[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.azure.openai.client.chat/publish-package.yml?style=for-the-badge)](https://github.com/soenneker/soenneker.azure.openai.client.chat/actions/workflows/publish-package.yml)
+[![](https://img.shields.io/nuget/dt/soenneker.azure.openai.client.chat.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.azure.openai.client.chat/)
+[![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.azure.openai.client.chat/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.azure.openai.client.chat/actions/workflows/codeql.yml)
 
-# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.OpenAI.Client.Chat
-### An async thread-safe singleton for the Azure OpenAI Chat (completions) client
+# Soenneker.Azure.OpenAI.Client.Chat
 
-This library provides an implementation for interacting with Azure's OpenAI service. It allows you to configure and utilize a ChatClient to perform various tasks using OpenAI's models.
-
-For the direct from OpenAI version of this: [Soenneker.OpenAI.Client.Chat](https://github.com/soenneker/soenneker.openai.client.chat)
+Creates and caches an OpenAI SDK `ChatClient` for an Azure OpenAI deployment.
 
 ## Installation
 
-```
+```bash
 dotnet add package Soenneker.Azure.OpenAI.Client.Chat
 ```
 
-Register:
+## Configuration and registration
 
+```json
+{
+  "Azure": {
+    "OpenAI": {
+      "Uri": "https://your-resource.openai.azure.com",
+      "ApiKey": "your-api-key",
+      "Chat": {
+        "Deployment": "chat-deployment-name"
+      }
+    }
+  }
+}
 ```
-builder.services.AddAzureOpenAIChatClientAsSingleton();
-```
-
-`IConfiguration` values:
-
-```
-"Azure:OpenAI:Chat:Deployment"
-"Azure:OpenAI:ApiKey"
-"Azure:OpenAI:Uri"
-```
-
-## Usage
 
 ```csharp
-public class OpenAIService
+using Soenneker.Azure.OpenAI.Client.Chat.Registrars;
+
+builder.Services.AddAzureOpenAIChatClientAsSingleton();
+```
+
+The registrar includes the shared Azure OpenAI client. Keep the API key in a secret provider.
+
+## Complete a chat request
+
+```csharp
+using OpenAI.Chat;
+using Soenneker.Azure.OpenAI.Client.Chat.Abstract;
+
+public sealed class ChatService(IAzureOpenAIChatClient chatClientUtil)
 {
-    private readonly IAzureOpenAIChatClient _chatClient;
-
-    public OpenAIService(IAzureOpenAIChatClient chatClient)
+    public async Task<string> Complete(
+        string prompt,
+        CancellationToken cancellationToken)
     {
-        _chatClient = chatClient;
-    }
+        ChatClient client = await chatClientUtil.Get(cancellationToken);
 
-    public async ValueTask<string> Chat(string prompt, CancellationToken cancellationToken = default)
-    {
-        var client = await _chatClient.Get(cancellationToken);
-        ChatCompletion completion = await client.CompleteChatAsync(prompt);
+        ChatCompletion completion = await client.CompleteChatAsync(
+            [new UserChatMessage(prompt)],
+            options: null,
+            cancellationToken: cancellationToken);
+
+        return completion.Content[0].Text;
     }
 }
 ```
+
+Handle empty content and model finish reasons according to the requirements of the consuming application.
+
+## Deployment and lifecycle
+
+- `Azure:OpenAI:Chat:Deployment` is required unless `SetOptions(deployment)` is called before the first `Get()`.
+- `SetOptions()` overrides configuration for that utility instance.
+- Calling `SetOptions()` after client creation throws; it does not silently change the cached deployment.
+- The chat client and underlying Azure client are cached. Replace the DI scope or singleton to switch deployments or credentials.
+- Prompts and completions may contain sensitive data. Apply appropriate logging, retention, content-safety, and access controls in the consuming application.
