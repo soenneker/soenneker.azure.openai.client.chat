@@ -21,9 +21,9 @@ public interface IAzureOpenAIChatClient : IDisposable, IAsyncDisposable
     void SetOptions(string deployment);
 
     /// <summary>
-    /// Gets the value.
+    /// Returns the configured chat Client used by the azure openai chat client.
     /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task containing the result of the operation.</returns>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task whose result is the requested chat Client.</returns>
     ValueTask<ChatClient> Get(CancellationToken cancellationToken = default);
 }

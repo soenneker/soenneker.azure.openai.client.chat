@@ -15,6 +15,8 @@ public static class AzureOpenAIChatClientRegistrar
     /// <summary>
     /// Adds <see cref="IAzureOpenAIChatClient"/> as a singleton service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddAzureOpenAIChatClientAsSingleton(this IServiceCollection services)
     {
         services.AddAzureOpenAIClientUtilAsSingleton().TryAddSingleton<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
@@ -25,6 +27,8 @@ public static class AzureOpenAIChatClientRegistrar
     /// <summary>
     /// Adds <see cref="IAzureOpenAIChatClient"/> as a scoped service. <para/>
     /// </summary>
+    /// <param name="services">Service collection that receives the registration.</param>
+    /// <returns>The same service collection, so additional registrations can be chained.</returns>
     public static IServiceCollection AddAzureOpenAIChatClientAsScoped(this IServiceCollection services)
     {
         services.AddAzureOpenAIClientUtilAsScoped().TryAddScoped<IAzureOpenAIChatClient, AzureOpenAIChatClient>();
