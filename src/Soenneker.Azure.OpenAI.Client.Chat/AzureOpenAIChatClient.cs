@@ -47,7 +47,8 @@ public sealed class AzureOpenAIChatClient : IAzureOpenAIChatClient
 
             deployment.ThrowIfNullOrWhiteSpace();
 
-            _logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("Creating Azure OpenAI Chat client with deployment ({deployment})...", deployment);
 
             ChatClient client = azureClient.GetChatClient(deployment);
             _clientCreated = true;
